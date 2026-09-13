@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AqTau Water</title>
+<title>AqTau Water - система мониторинга воды</title>
+
+<!-- LEAFLET -->
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
 <style>
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -24,13 +32,13 @@ body {
 header {
     background: #087ea4;
     color: white;
-    padding: 18px 6%;
+    padding: 16px 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
 }
 
 .logo {
@@ -42,22 +50,32 @@ header {
     font-weight: normal;
 }
 
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
 nav button {
     border: none;
-    background: none;
+    background: transparent;
     color: white;
     cursor: pointer;
-    margin-left: 15px;
-    font-size: 14px;
+    padding: 9px;
+    border-radius: 8px;
+}
+
+nav button:hover {
+    background: rgba(255,255,255,.15);
 }
 
 /* PAGES */
 
 .page {
     display: none;
-    max-width: 1100px;
+    max-width: 1150px;
     margin: auto;
-    padding: 40px 6%;
+    padding: 35px 5%;
 }
 
 .page.active {
@@ -67,39 +85,38 @@ nav button {
 /* HERO */
 
 .hero {
-    background: linear-gradient(135deg, #087ea4, #13afd0);
+    background: linear-gradient(135deg,#087ea4,#13afd0);
     color: white;
-    padding: 55px 40px;
-    border-radius: 25px;
+    padding: 45px 35px;
+    border-radius: 24px;
     margin-bottom: 25px;
 }
 
 .hero h1 {
-    font-size: 43px;
+    font-size: 40px;
     margin-bottom: 15px;
 }
 
 .hero p {
-    max-width: 650px;
+    max-width: 750px;
     line-height: 1.6;
-    font-size: 18px;
-    margin-bottom: 25px;
+    font-size: 17px;
 }
 
 /* BUTTON */
 
 .btn {
     border: none;
-    border-radius: 12px;
-    padding: 14px 20px;
+    border-radius: 10px;
+    padding: 13px 18px;
     background: #087ea4;
     color: white;
-    font-size: 15px;
     cursor: pointer;
+    font-size: 15px;
 }
 
 .btn:hover {
-    opacity: 0.85;
+    opacity: .85;
 }
 
 .white {
@@ -107,19 +124,27 @@ nav button {
     color: #087ea4;
 }
 
+.red {
+    background: #c62828;
+}
+
+.green {
+    background: #18864b;
+}
+
 /* CARDS */
 
 .cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3,1fr);
     gap: 18px;
 }
 
 .card {
     background: white;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    padding: 23px;
+    border-radius: 17px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
 }
 
 .stat {
@@ -129,16 +154,16 @@ nav button {
 }
 
 .card p {
-    margin-top: 8px;
+    margin-top: 7px;
 }
 
 /* FORM */
 
 .form {
     background: white;
-    padding: 28px;
-    border-radius: 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
 }
 
 label {
@@ -151,9 +176,9 @@ input,
 textarea,
 select {
     width: 100%;
-    padding: 14px;
-    border: 1px solid #d5e2e8;
-    border-radius: 10px;
+    padding: 13px;
+    border: 1px solid #d4e2e8;
+    border-radius: 9px;
     font-size: 15px;
 }
 
@@ -162,122 +187,100 @@ textarea {
 }
 
 .upload {
-    border: 2px dashed #9acbd9;
-    border-radius: 15px;
-    padding: 30px;
+    border: 2px dashed #9bcbd8;
+    border-radius: 13px;
+    padding: 25px;
     text-align: center;
-    background: #f7fcfe;
+    background: #f8fcfd;
     cursor: pointer;
-}
-
-.upload:hover {
-    background: #eefaff;
 }
 
 .preview {
     max-width: 250px;
     max-height: 200px;
     margin-top: 15px;
-    border-radius: 12px;
+    border-radius: 10px;
 }
 
-/* AI RESULT */
+/* RESULT */
 
 .result {
     display: none;
-    margin-top: 25px;
-    padding: 22px;
-    border-radius: 16px;
-    background: #eaf8f3;
+    margin-top: 22px;
+    padding: 20px;
+    border-radius: 15px;
+    background: #eef8fb;
 }
 
-.result h3 {
-    margin-bottom: 15px;
-}
-
-.result p {
+.result-item {
     margin: 10px 0;
 }
 
-.badge {
-    display: inline-block;
-    padding: 6px 10px;
-    border-radius: 20px;
-    background: #ffe0e0;
-    color: #b32121;
+.big-number {
+    font-size: 32px;
     font-weight: bold;
+    color: #087ea4;
+}
+
+.risk {
+    display: inline-block;
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.risk-low {
+    background: #dff5e8;
+    color: #16733d;
+}
+
+.risk-medium {
+    background: #fff0cf;
+    color: #996500;
+}
+
+.risk-high {
+    background: #ffe0e0;
+    color: #a71919;
 }
 
 /* MAP */
 
-.map {
-    height: 430px;
-    border-radius: 20px;
-    background:
-        linear-gradient(45deg, transparent 45%, #fff 46%, #fff 50%, transparent 51%),
-        linear-gradient(-30deg, transparent 45%, #fff 46%, #fff 50%, transparent 51%),
-        #d8edf1;
-    background-size: 180px 180px;
-    position: relative;
+#map {
+    height: 550px;
+    width: 100%;
+    border-radius: 18px;
     overflow: hidden;
-    border: 1px solid #b9dce5;
+    border: 1px solid #c8dfe6;
 }
 
-.map-title {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: white;
-    padding: 12px 15px;
-    border-radius: 12px;
-    z-index: 5;
-    box-shadow: 0 3px 10px rgba(0,0,0,.1);
-}
-
-.pin {
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
-    background: red;
-    cursor: pointer;
-    box-shadow: 0 3px 8px rgba(0,0,0,.3);
-}
-
-.pin::after {
-    content: "";
-    width: 9px;
-    height: 9px;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    left: 8px;
-    top: 8px;
-}
-
-.pin1 {
-    left: 25%;
-    top: 32%;
-}
-
-.pin2 {
-    left: 62%;
-    top: 50%;
-    background: orange;
-}
-
-.pin3 {
-    left: 48%;
-    top: 75%;
-    background: green;
-}
-
-.legend {
-    margin: 15px 0;
+.map-info {
+    margin-bottom: 15px;
     padding: 15px;
     background: white;
     border-radius: 12px;
+}
+
+/* DASHBOARD */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.dashboard-card strong {
+    display: block;
+    font-size: 27px;
+    color: #087ea4;
+    margin-top: 7px;
 }
 
 /* TABLE */
@@ -290,33 +293,56 @@ table {
     width: 100%;
     border-collapse: collapse;
     background: white;
-    border-radius: 15px;
-    overflow: hidden;
 }
 
 th,
 td {
-    padding: 14px;
+    padding: 12px;
+    border-bottom: 1px solid #e4edf0;
     text-align: left;
-    border-bottom: 1px solid #e5edf0;
 }
 
 th {
-    background: #eaf6fa;
+    background: #e9f5f8;
 }
 
-/* SUCCESS */
-
 .success {
-    color: #17814d;
+    color: #18864b;
     font-weight: bold;
 }
 
+.photo-small {
+    width: 90px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+/* CALCULATOR */
+
+.calculator {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+}
+
+.calc-result {
+    margin-top: 20px;
+    padding: 20px;
+    background: #eef8fb;
+    border-radius: 14px;
+}
+
+/* NOTICE */
+
 .notice {
-    background: #fff8df;
+    background: #fff7dc;
     padding: 15px;
     border-radius: 12px;
     margin: 15px 0;
+    line-height: 1.5;
 }
 
 /* FOOTER */
@@ -331,42 +357,42 @@ footer {
 
 /* MOBILE */
 
-@media(max-width:700px) {
+@media(max-width:750px) {
 
     header {
         flex-direction: column;
-        gap: 15px;
+        gap: 12px;
     }
 
-    nav button {
-        margin: 3px;
-        font-size: 12px;
-    }
-
-    .hero {
-        padding: 35px 25px;
+    nav {
+        justify-content: center;
     }
 
     .hero h1 {
         font-size: 30px;
     }
 
-    .cards {
+    .cards,
+    .dashboard {
         grid-template-columns: 1fr;
     }
 
     .page {
-        padding: 25px 5%;
+        padding: 25px 4%;
     }
 
-    .map {
-        height: 350px;
+    #map {
+        height: 430px;
     }
+
 }
+
 </style>
+
 </head>
 
 <body>
+
 
 <!-- HEADER -->
 
@@ -377,10 +403,27 @@ footer {
 </div>
 
 <nav>
-<button onclick="showPage('home')">Главная</button>
-<button onclick="showPage('report')">Сообщить</button>
-<button onclick="showPage('mapPage')">Карта</button>
-<button onclick="showPage('admin')">Специалистам</button>
+
+<button onclick="showPage('home')">
+Главная
+</button>
+
+<button onclick="showPage('report')">
+Сообщить
+</button>
+
+<button onclick="showPage('mapPage')">
+Карта
+</button>
+
+<button onclick="showPage('calculator')">
+Расчёт
+</button>
+
+<button onclick="showPage('admin')">
+Мониторинг
+</button>
+
 </nav>
 
 </header>
@@ -393,18 +436,24 @@ footer {
 <div class="hero">
 
 <h1>
-Сохраним воду Актау вместе
+AqTau Water
 </h1>
 
 <p>
-Заметили лужу, влажный участок или подозрительный шум?
-Сообщите об этом через AqTau Water.
-Искусственный интеллект поможет оценить вероятность утечки,
-а информация будет передана специалистам.
+Система мониторинга потерь воды в Актау.
+Сайт собирает сообщения жителей, координаты,
+фотографии и показания водопроводной сети,
+а затем рассчитывает фактические потери воды
+и уровень риска.
 </p>
 
-<button class="btn white" onclick="showPage('report')">
-💧 Сообщить об утечке
+<br>
+
+<button
+class="btn white"
+onclick="showPage('report')"
+>
+💧 Сообщить о проблеме
 </button>
 
 </div>
@@ -413,18 +462,41 @@ footer {
 <div class="cards">
 
 <div class="card">
-<div class="stat">127</div>
-<p>Получено заявок</p>
+
+<div class="stat" id="homeReports">
+0
 </div>
 
-<div class="card">
-<div class="stat">94</div>
-<p>Утечки подтверждены</p>
+<p>
+Получено сообщений
+</p>
+
 </div>
 
+
 <div class="card">
-<div class="stat">18 400 л</div>
-<p>Потенциально сохранено воды</p>
+
+<div class="stat" id="homeHighRisk">
+0
+</div>
+
+<p>
+Высокий риск
+</p>
+
+</div>
+
+
+<div class="card">
+
+<div class="stat" id="homeLoss">
+0
+</div>
+
+<p>
+Общие потери, м³/ч
+</p>
+
 </div>
 
 </div>
@@ -432,50 +504,83 @@ footer {
 
 <br>
 
+
 <div class="card">
 
-<h2>Как это работает?</h2>
+<h2>
+Как работает система
+</h2>
 
 <br>
 
 <p>
-<b>1.</b> Житель фотографирует подозрительное место.
+<b>1.</b> Житель или специалист сообщает о проблеме.
 </p>
 
-<p>
-<b>2.</b> Указывает место и описание проблемы.
-</p>
+<br>
 
 <p>
-<b>3.</b> ИИ оценивает вероятность утечки.
+<b>2.</b> Система получает координаты и данные.
 </p>
 
-<p>
-<b>4.</b> Заявка передаётся специалистам.
-</p>
+<br>
 
 <p>
-<b>5.</b> Специалист проверяет проблему.
+<b>3.</b> Рассчитывается фактическая потеря воды.
 </p>
+
+<br>
+
+<p>
+<b>4.</b> Система определяет уровень риска.
+</p>
+
+<br>
+
+<p>
+<b>5.</b> Проблемный участок отображается на карте.
+</p>
+
+</div>
+
+<br>
+
+
+<div class="notice">
+
+<b>Важно:</b>
+система не придумывает данные о существующих утечках.
+Она показывает только зарегистрированные сообщения
+и расчёты на основе введённых показаний.
 
 </div>
 
 </section>
 
 
+
 <!-- REPORT -->
 
 <section id="report" class="page">
 
-<h1>Сообщить об утечке</h1>
+<h1>
+Сообщить о проблеме
+</h1>
 
 <br>
 
+
 <div class="form">
 
-<label>📷 Фотография</label>
 
-<div class="upload" onclick="document.getElementById('photo').click()">
+<label>
+📷 Фотография
+</label>
+
+<div
+class="upload"
+onclick="document.getElementById('photo').click()"
+>
 
 <span id="uploadText">
 Нажмите, чтобы выбрать фотографию
@@ -494,7 +599,9 @@ onchange="previewPhoto(event)"
 </div>
 
 
-<label>📍 Адрес или место</label>
+<label>
+📍 Адрес / место
+</label>
 
 <input
 id="address"
@@ -502,16 +609,49 @@ placeholder="Например: 14 мкр., возле дома 25"
 >
 
 
-<label>Что вы заметили?</label>
+<br>
+
+<button
+class="btn"
+onclick="getLocation()"
+>
+📍 Определить моё местоположение
+</button>
+
+
+<div
+id="locationStatus"
+style="margin-top:10px;color:#087ea4;"
+>
+Координаты ещё не определены
+</div>
+
+
+<input
+id="latitude"
+type="hidden"
+>
+
+<input
+id="longitude"
+type="hidden"
+>
+
+
+<label>
+Что произошло?
+</label>
 
 <textarea
 id="description"
 rows="4"
-placeholder="Например: большая лужа возле дороги, слышен шум воды..."
+placeholder="Например: вода выходит из-под земли..."
 ></textarea>
 
 
-<label>Срочность</label>
+<label>
+Предполагаемая срочность
+</label>
 
 <select id="urgency">
 
@@ -522,47 +662,74 @@ placeholder="Например: большая лужа возле дороги, 
 
 </select>
 
+
 <br><br>
 
-<button class="btn" onclick="analyzeLeak()">
 
-🤖 Проверить с помощью ИИ
-
+<button
+class="btn"
+onclick="analyzeReport()"
+>
+🔎 Проанализировать
 </button>
 
 
-<!-- RESULT -->
+<div
+id="reportResult"
+class="result"
+>
 
-<div id="result" class="result">
+<h3>
+Результат анализа
+</h3>
 
-<h3>🤖 Результат AI-анализа</h3>
+<div class="result-item">
 
-<p>
-<b>Вероятность утечки:</b>
-<span id="probability">87%</span>
-</p>
+<b>
+Оценка риска:
+</b>
 
-<p>
-<b>Предполагаемый масштаб:</b>
-<span id="scale">Средний</span>
-</p>
+<span id="reportRisk">
+-
+</span>
 
-<p>
-<b>Срочность:</b>
-<span class="badge">Высокая</span>
-</p>
+</div>
 
-<p>
-<b>Предполагаемая причина:</b>
-Повреждение водопроводной трубы
-</p>
+
+<div class="result-item">
+
+<b>
+Основание:
+</b>
+
+<span id="reportReason">
+-
+</span>
+
+</div>
+
+
+<div class="result-item">
+
+<b>
+Координаты:
+</b>
+
+<span id="reportCoordinates">
+-
+</span>
+
+</div>
+
 
 <br>
 
-<button class="btn" onclick="sendReport()">
 
-📨 Отправить специалистам
-
+<button
+class="btn"
+onclick="sendReport()"
+>
+📨 Сохранить сообщение
 </button>
 
 </div>
@@ -570,52 +737,245 @@ placeholder="Например: большая лужа возле дороги, 
 </div>
 
 </section>
+
 
 
 <!-- MAP -->
 
 <section id="mapPage" class="page">
 
-<h1>Карта утечек Актау</h1>
+<h1>
+Реальная карта сообщений
+</h1>
 
-<div class="legend">
+<br>
 
-🔴 Высокая срочность
+<div class="map-info">
+
+🔴 Высокий риск
 &nbsp;&nbsp;
-🟠 Средняя
+🟠 Средний риск
 &nbsp;&nbsp;
-🟢 Низкая
+🟢 Низкий риск
+
+<br><br>
+
+На карте отображаются только сообщения,
+сохранённые в системе.
 
 </div>
 
 
-<div class="map">
+<div id="map"></div>
 
-<div class="map-title">
-📍 Актау
+</section>
+
+
+
+<!-- CALCULATOR -->
+
+<section id="calculator" class="page">
+
+<h1>
+Расчёт потерь воды
+</h1>
+
+<br>
+
+<div class="notice">
+
+Здесь используется математический расчёт.
+Процент не задаётся вручную.
+
 </div>
 
-<div id="mapReports"></div>
+
+<div class="calculator">
+
+
+<label>
+💧 Расход воды на входе, м³/ч
+</label>
+
+<input
+id="inputFlow"
+type="number"
+min="0"
+step="0.01"
+placeholder="Например: 1000"
+>
+
+
+<label>
+💧 Расход воды на выходе, м³/ч
+</label>
+
+<input
+id="outputFlow"
+type="number"
+min="0"
+step="0.01"
+placeholder="Например: 920"
+>
+
+
+<label>
+📈 Давление до участка, bar
+</label>
+
+<input
+id="pressureBefore"
+type="number"
+min="0"
+step="0.01"
+placeholder="Например: 5.2"
+>
+
+
+<label>
+📉 Давление после участка, bar
+</label>
+
+<input
+id="pressureAfter"
+type="number"
+min="0"
+step="0.01"
+placeholder="Например: 4.4"
+>
+
+
+<br><br>
+
+
+<button
+class="btn"
+onclick="calculateWaterLoss()"
+>
+Рассчитать
+</button>
+
+
+<div
+id="calculationResult"
+class="calc-result"
+style="display:none"
+>
+
+<h3>
+Результат
+</h3>
+
+<br>
+
+<p>
+Потеря воды:
+<strong id="lossVolume">
+-
+</strong>
+м³/ч
+</p>
+
+<br>
+
+<p>
+Процент потери:
+<strong id="lossPercent">
+-
+</strong>
+%
+</p>
+
+<br>
+
+<p>
+Падение давления:
+<strong id="pressureDrop">
+-
+</strong>
+bar
+</p>
+
+<br>
+
+<p>
+Уровень риска:
+<strong id="calculationRisk">
+-
+</strong>
+</p>
+
+<br>
+
+<p id="calculationExplanation">
+</p>
+
+</div>
 
 </div>
 
 </section>
 
 
+
 <!-- ADMIN -->
 
 <section id="admin" class="page">
 
-<h1>Панель специалистов</h1>
+<h1>
+Панель мониторинга
+</h1>
 
 <br>
 
-<div class="notice">
 
-💡 Здесь специалисты могут видеть поступившие заявки
-и контролировать их статус.
+<div class="dashboard">
+
+<div class="dashboard-card">
+
+Сообщений
+
+<strong id="dashReports">
+0
+</strong>
 
 </div>
+
+
+<div class="dashboard-card">
+
+Высокий риск
+
+<strong id="dashHigh">
+0
+</strong>
+
+</div>
+
+
+<div class="dashboard-card">
+
+Средний риск
+
+<strong id="dashMedium">
+0
+</strong>
+
+</div>
+
+
+<div class="dashboard-card">
+
+Потери
+
+<strong id="dashLoss">
+0 м³/ч
+</strong>
+
+</div>
+
+</div>
+
 
 <div class="table-container">
 
@@ -625,47 +985,19 @@ placeholder="Например: большая лужа возле дороги, 
 
 <tr>
 
-<th>Заявка</th>
+<th>№</th>
 <th>Место</th>
-<th>Вероятность</th>
-<th>Срочность</th>
+<th>Риск</th>
+<th>Координаты</th>
+<th>Фото</th>
 <th>Статус</th>
 
 </tr>
 
 </thead>
 
+
 <tbody id="reports">
-
-<tr>
-
-<td>#024</td>
-<td>14 мкр.</td>
-<td>91%</td>
-<td>Высокая</td>
-<td>Новая</td>
-
-</tr>
-
-<tr>
-
-<td>#023</td>
-<td>5 мкр.</td>
-<td>78%</td>
-<td>Средняя</td>
-<td>В работе</td>
-
-</tr>
-
-<tr>
-
-<td>#022</td>
-<td>3 мкр.</td>
-<td>42%</td>
-<td>Низкая</td>
-<td>Проверена</td>
-
-</tr>
 
 </tbody>
 
@@ -676,458 +1008,98 @@ placeholder="Например: большая лужа возле дороги, 
 </section>
 
 
+
 <footer>
 
 💧 AqTau Water
 
 <br><br>
 
-Сервис для быстрого обнаружения утечек воды в Актау
+Система мониторинга и раннего обнаружения потерь воды
 
 </footer>
 
 
+
+<!-- LEAFLET -->
+
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+
+<!-- FIREBASE -->
+
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-    getDatabase,
-    ref,
-    push,
-    onValue
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
+
+import {
+getDatabase,
+ref,
+push,
+onValue
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+
+/* FIREBASE */
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDty1_Zwxk8-3oogyKoicyhG1nHSOHDGF0",
-    authDomain: "aqtau-water.firebaseapp.com",
-    databaseURL: "https://aqtau-water-default-rtdb.firebaseio.com",
-    projectId: "aqtau-water",
-    storageBucket: "aqtau-water.firebasestorage.app",
-    messagingSenderId: "529911210293",
-    appId: "1:529911210293:web:15e86463a0fe94a2ac2c7c",
-    measurementId: "G-Y37FQJJJ99"
-};
 
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+apiKey:
+"AIzaSyDty1_Zwxk-3oogyKoicyhG1nHSOHDGF0",
 
+authDomain:
+"aqtau-water.firebaseapp.com",
 
-/* ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ */
+databaseURL:
+"https://aqtau-water-default-rtdb.firebaseio.com",
 
-window.showPage = function(pageId) {
+projectId:
+"aqtau-water",
 
-    document.querySelectorAll(".page").forEach(page => {
-        page.classList.remove("active");
-    });
+storageBucket:
+"aqtau-water.firebasestorage.app",
 
-    document.getElementById(pageId).classList.add("active");
+messagingSenderId:
+"529911210293",
 
-    window.scrollTo(0, 0);
-};
+appId:
+"1:529911210293:web:15e86463a0fe94a2ac2c7c",
 
-
-/* ПРЕВЬЮ ФОТО */
-
-window.previewPhoto = function(event) {
-
-    const file = event.target.files[0];
-
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-
-        document.getElementById("uploadText").innerText =
-            "✅ Фотография выбрана";
-
-        document.getElementById("previewContainer").innerHTML =
-            `<img src="${e.target.result}" class="preview">`;
-
-    };
-
-    reader.readAsDataURL(file);
-};
-
-
-/* AI АНАЛИЗ */
-
-window.analyzeLeak = function() {
-
-    const description =
-        document.getElementById("description").value.toLowerCase();
-
-    let probability = 87;
-    let scale = "Средний";
-
-    if (
-        description.includes("большая") ||
-        description.includes("сильная") ||
-        description.includes("много воды")
-    ) {
-        probability = 94;
-        scale = "Большой";
-    }
-
-    if (
-        description.includes("маленькая") ||
-        description.includes("немного")
-    ) {
-        probability = 64;
-        scale = "Небольшой";
-    }
-
-    document.getElementById("probability").innerText =
-        probability + "%";
-
-    document.getElementById("scale").innerText =
-        scale;
-
-    document.getElementById("result").style.display =
-        "block";
-};
-
-
-/* УМЕНЬШЕНИЕ ФОТО */
-
-function compressImage(file) {
-
-    return new Promise((resolve) => {
-
-        const reader = new FileReader();
-
-        reader.onload = function(event) {
-
-            const img = new Image();
-
-            img.onload = function() {
-
-                const canvas = document.createElement("canvas");
-
-                const maxSize = 800;
-
-                let width = img.width;
-                let height = img.height;
-
-                if (width > height && width > maxSize) {
-
-                    height = height * maxSize / width;
-                    width = maxSize;
-
-                } else if (height > maxSize) {
-
-                    width = width * maxSize / height;
-                    height = maxSize;
-
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-
-                const ctx = canvas.getContext("2d");
-
-                ctx.drawImage(
-                    img,
-                    0,
-                    0,
-                    width,
-                    height
-                );
-
-                const compressed =
-                    canvas.toDataURL(
-                        "image/jpeg",
-                        0.6
-                    );
-
-                resolve(compressed);
-
-            };
-
-            img.src = event.target.result;
-        };
-
-        reader.readAsDataURL(file);
-
-    });
-}
-
-
-/* ОТПРАВКА ЗАЯВКИ */
-
-window.sendReport = async function() {
-
-    const address =
-        document.getElementById("address").value ||
-        "Место не указано";
-
-    const description =
-        document.getElementById("description").value ||
-        "Описание отсутствует";
-
-    const urgency =
-        document.getElementById("urgency").value;
-
-    const probability =
-        document.getElementById("probability").innerText;
-
-    const scale =
-        document.getElementById("scale").innerText;
-
-    const photoInput =
-        document.getElementById("photo");
-
-    let photo = "";
-
-    if (photoInput.files.length > 0) {
-
-        photo = await compressImage(
-            photoInput.files[0]
-        );
-
-    }
-
-    const report = {
-
-        address: address,
-        description: description,
-        urgency: urgency,
-        probability: probability,
-        scale: scale,
-        status: "Новая",
-        photo: photo,
-        createdAt: new Date().toISOString()
-
-    };
-
-    try {
-
-        await push(
-            ref(database, "reports"),
-            report
-        );
-
-        alert(
-            "✅ Заявка с фотографией сохранена!"
-        );
-
-        document.getElementById("address").value = "";
-        document.getElementById("description").value = "";
-        document.getElementById("urgency").value = "Не знаю";
-        document.getElementById("photo").value = "";
-
-        document.getElementById("previewContainer").innerHTML = "";
-
-        document.getElementById("uploadText").innerText =
-            "Нажмите, чтобы выбрать фотографию";
-
-        document.getElementById("result").style.display =
-            "none";
-
-        showPage("admin");
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "❌ Не удалось сохранить заявку."
-        );
-
-    }
+measurementId:
+"G-Y37FQJJJ99"
 
 };
 
 
-/* ЗАГРУЗКА ЗАЯВОК */
-
-const reportsRef =
-    ref(database, "reports");
-
-onValue(reportsRef, (snapshot) => {
-
-    const table =
-        document.getElementById("reports");
-    const mapReports =
-        document.getElementById("mapReports");
-    
-    mapReports.innerHTML = "";
-
-    table.innerHTML = "";
-
-    if (!snapshot.exists()) {
-
-        table.innerHTML = `
-            <tr>
-                <td colspan="6">
-                    Заявок пока нет
-                </td>
-            </tr>
-        `;
-
-        return;
-    }
-
-    const reports =
-        snapshot.val();
-
-    Object.entries(reports)
-        .reverse()
-        .forEach(([id, report], index) => 
-    {
-            const pin = document.createElement("div");
-
-pin.className = "pin";
-
-pin.style.left = (10 + (index * 17) % 80) + "%";
-pin.style.top = (20 + (index * 23) % 65) + "%";
-
-pin.title =
-    "Утечка #" + String(25 + index).padStart(3, "0")
-    + " - " + report.urgency;
-
-if (report.urgency === "Высокая") {
-    pin.style.background = "red";
-}
-
-if (report.urgency === "Средняя") {
-    pin.style.background = "orange";
-}
-
-if (report.urgency === "Низкая") {
-    pin.style.background = "green";
-}
-
-mapReports.appendChild(pin);
-        pin.onclick = function() {
-
-    const oldPopup = document.querySelector(".map-popup");
-
-    if (oldPopup) {
-        oldPopup.remove();
-    }
-
-    const popup = document.createElement("div");
-
-    popup.className = "map-popup";
-
-    popup.innerHTML = `
-        <div style="
-            background:white;
-            padding:15px;
-            border-radius:12px;
-            box-shadow:0 4px 15px rgba(0,0,0,.25);
-            width:230px;
-            position:absolute;
-            z-index:100;
-        ">
-            <b>📍 Адрес:</b><br>
-            ${escapeHtml(report.address)}
-            <br><br>
-
-            <b>⚠️ Срочность:</b><br>
-            ${escapeHtml(report.urgency)}
-            <br><br>
-
-            ${
-                report.photo
-                ? `<img src="${report.photo}" style="
-                    width:100%;
-                    max-height:150px;
-                    object-fit:cover;
-                    border-radius:8px;
-                ">`
-                : "📷 Фотографии нет"
-            }
-
-            <br><br>
-
-            <button onclick="this.parentElement.parentElement.remove()">
-                Закрыть
-            </button>
-        </div>
-    `;
-
-    popup.style.position = "absolute";
-    popup.style.left = pin.style.left;
-    popup.style.top = "50px";
-
-    mapReports.appendChild(popup);
-};
-
-            const number =
-                String(25 + index).padStart(3, "0");
-
-            const newRow =
-                document.createElement("tr");
-
-            newRow.innerHTML = `
-
-                <td>#${number}</td>
-
-                <td>
-                    ${escapeHtml(report.address)}
-                </td>
-
-                <td>
-                    ${escapeHtml(report.probability)}
-                </td>
-
-                <td>
-                    ${escapeHtml(report.urgency)}
-                </td>
-
-                <td class="success">
-                    ${escapeHtml(report.status)}
-                </td>
-
-                <td>
-
-                    ${
-                        report.photo
-                        ?
-                        `<img
-                            src="${report.photo}"
-                            style="
-                                width:100px;
-                                height:70px;
-                                object-fit:cover;
-                                border-radius:8px;
-                                cursor:pointer;
-                            "
-                            onclick="window.open('${report.photo}')"
-                        >`
-                        :
-                        "Нет фото"
-                    }
-
-                </td>
-
-            `;
-
-            table.appendChild(newRow);
-
-        });
-
-});
+const app =
+initializeApp(firebaseConfig);
 
 
-/* ЗАЩИТА ТЕКСТА */
+const database =
+getDatabase(app);
 
-function escapeHtml(text) {
 
-    const div =
-        document.createElement("div");
 
-    div.textContent =
-        text ?? "";
+/* MAP */
 
-    return div.innerHTML;
+const map =
+L.map("map").setView(
+[43.65, 51.15],
+12
+);
 
-}
 
-</script>
-</body>
-</html>
+L.tileLayer(
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{
