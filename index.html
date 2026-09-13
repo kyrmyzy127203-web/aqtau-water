@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AqTau Water</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f9fc;
+    color: #163447;
+}
+
+/* HEADER */
+
+header {
+    background: #087ea4;
+    color: white;
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.logo span {
+    font-weight: normal;
+}
+
+nav button {
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+    margin-left: 15px;
+    font-size: 14px;
+}
+
+/* PAGES */
+
+.page {
+    display: none;
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 6%;
+}
+
+.page.active {
+    display: block;
+}
+
+/* HERO */
+
+.hero {
+    background: linear-gradient(135deg, #087ea4, #13afd0);
+    color: white;
+    padding: 55px 40px;
+    border-radius: 25px;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    font-size: 43px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    max-width: 650px;
+    line-height: 1.6;
+    font-size: 18px;
+    margin-bottom: 25px;
+}
+
+/* BUTTON */
+
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    background: #087ea4;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    opacity: 0.85;
+}
+
+.white {
+    background: white;
+    color: #087ea4;
+}
+
+/* CARDS */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+}
+
+.stat {
+    font-size: 30px;
+    font-weight: bold;
+    color: #087ea4;
+}
+
+.card p {
+    margin-top: 8px;
+}
+
+/* FORM */
+
+.form {
+    background: white;
+    padding: 28px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+}
+
+label {
+    display: block;
+    margin: 18px 0 8px;
+    font-weight: bold;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d5e2e8;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.upload {
+    border: 2px dashed #9acbd9;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    background: #f7fcfe;
+    cursor: pointer;
+}
+
+.upload:hover {
+    background: #eefaff;
+}
+
+.preview {
+    max-width: 250px;
+    max-height: 200px;
+    margin-top: 15px;
+    border-radius: 12px;
+}
+
+/* AI RESULT */
+
+.result {
+    display: none;
+    margin-top: 25px;
+    padding: 22px;
+    border-radius: 16px;
+    background: #eaf8f3;
+}
+
+.result h3 {
+    margin-bottom: 15px;
+}
+
+.result p {
+    margin: 10px 0;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #ffe0e0;
+    color: #b32121;
+    font-weight: bold;
+}
+
+/* MAP */
+
+.map {
+    height: 430px;
+    border-radius: 20px;
+    background:
+        linear-gradient(45deg, transparent 45%, #fff 46%, #fff 50%, transparent 51%),
+        linear-gradient(-30deg, transparent 45%, #fff 46%, #fff 50%, transparent 51%),
+        #d8edf1;
+    background-size: 180px 180px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #b9dce5;
+}
+
+.map-title {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: white;
+    padding: 12px 15px;
+    border-radius: 12px;
+    z-index: 5;
+    box-shadow: 0 3px 10px rgba(0,0,0,.1);
+}
+
+.pin {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    background: red;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0,0,0,.3);
+}
+
+.pin::after {
+    content: "";
+    width: 9px;
+    height: 9px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    left: 8px;
+    top: 8px;
+}
+
+.pin1 {
+    left: 25%;
+    top: 32%;
+}
+
+.pin2 {
+    left: 62%;
+    top: 50%;
+    background: orange;
+}
+
+.pin3 {
+    left: 48%;
+    top: 75%;
+    background: green;
+}
+
+.legend {
+    margin: 15px 0;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+}
+
+/* TABLE */
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e5edf0;
+}
+
+th {
+    background: #eaf6fa;
+}
+
+/* SUCCESS */
+
+.success {
+    color: #17814d;
+    font-weight: bold;
+}
+
+.notice {
+    background: #fff8df;
+    padding: 15px;
+    border-radius: 12px;
+    margin: 15px 0;
+}
+
+/* FOOTER */
+
+footer {
+    margin-top: 40px;
+    padding: 30px;
+    background: #073f55;
+    color: white;
+    text-align: center;
+}
+
+/* MOBILE */
+
+@media(max-width:700px) {
+
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav button {
+        margin: 3px;
+        font-size: 12px;
+    }
+
+    .hero {
+        padding: 35px 25px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .page {
+        padding: 25px 5%;
+    }
+
+    .map {
+        height: 350px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+<div class="logo">
+💧 AqTau <span>Water</span>
+</div>
+
+<nav>
+<button onclick="showPage('home')">Главная</button>
+<button onclick="showPage('report')">Сообщить</button>
+<button onclick="showPage('mapPage')">Карта</button>
+<button onclick="showPage('admin')">Специалистам</button>
+</nav>
+
+</header>
+
+
+<!-- HOME -->
+
+<section id="home" class="page active">
+
+<div class="hero">
+
+<h1>
+Сохраним воду Актау вместе
+</h1>
+
+<p>
+Заметили лужу, влажный участок или подозрительный шум?
+Сообщите об этом через AqTau Water.
+Искусственный интеллект поможет оценить вероятность утечки,
+а информация будет передана специалистам.
+</p>
+
+<button class="btn white" onclick="showPage('report')">
+💧 Сообщить об утечке
+</button>
+
+</div>
+
+
+<div class="cards">
+
+<div class="card">
+<div class="stat">127</div>
+<p>Получено заявок</p>
+</div>
+
+<div class="card">
+<div class="stat">94</div>
+<p>Утечки подтверждены</p>
+</div>
+
+<div class="card">
+<div class="stat">18 400 л</div>
+<p>Потенциально сохранено воды</p>
+</div>
+
+</div>
+
+
+<br>
+
+<div class="card">
+
+<h2>Как это работает?</h2>
+
+<br>
+
+<p>
+<b>1.</b> Житель фотографирует подозрительное место.
+</p>
+
+<p>
+<b>2.</b> Указывает место и описание проблемы.
+</p>
+
+<p>
+<b>3.</b> ИИ оценивает вероятность утечки.
+</p>
+
+<p>
+<b>4.</b> Заявка передаётся специалистам.
+</p>
+
+<p>
+<b>5.</b> Специалист проверяет проблему.
+</p>
+
+</div>
+
+</section>
+
+
+<!-- REPORT -->
+
+<section id="report" class="page">
+
+<h1>Сообщить об утечке</h1>
+
+<br>
+
+<div class="form">
+
+<label>📷 Фотография</label>
+
+<div class="upload" onclick="document.getElementById('photo').click()">
+
+<span id="uploadText">
+Нажмите, чтобы выбрать фотографию
+</span>
+
+<input
+id="photo"
+type="file"
+accept="image/*"
+hidden
+onchange="previewPhoto(event)"
+>
+
+<div id="previewContainer"></div>
+
+</div>
+
+
+<label>📍 Адрес или место</label>
+
+<input
+id="address"
+placeholder="Например: 14 мкр., возле дома 25"
+>
+
+
+<label>Что вы заметили?</label>
+
+<textarea
+id="description"
+rows="4"
+placeholder="Например: большая лужа возле дороги, слышен шум воды..."
+></textarea>
+
+
+<label>Срочность</label>
+
+<select id="urgency">
+
+<option>Не знаю</option>
+<option>Низкая</option>
+<option>Средняя</option>
+<option>Высокая</option>
+
+</select>
+
+<br><br>
+
+<button class="btn" onclick="analyzeLeak()">
+
+🤖 Проверить с помощью ИИ
+
+</button>
+
+
+<!-- RESULT -->
+
+<div id="result" class="result">
+
+<h3>🤖 Результат AI-анализа</h3>
+
+<p>
+<b>Вероятность утечки:</b>
+<span id="probability">87%</span>
+</p>
+
+<p>
+<b>Предполагаемый масштаб:</b>
+<span id="scale">Средний</span>
+</p>
+
+<p>
+<b>Срочность:</b>
+<span class="badge">Высокая</span>
+</p>
+
+<p>
+<b>Предполагаемая причина:</b>
+Повреждение водопроводной трубы
+</p>
+
+<br>
+
+<button class="btn" onclick="sendReport()">
+
+📨 Отправить специалистам
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- MAP -->
+
+<section id="mapPage" class="page">
+
+<h1>Карта утечек Актау</h1>
+
+<div class="legend">
+
+🔴 Высокая срочность
+&nbsp;&nbsp;
+🟠 Средняя
+&nbsp;&nbsp;
+🟢 Низкая
+
+</div>
+
+
+<div class="map">
+
+<div class="map-title">
+📍 Актау
+</div>
+
+<div
+class="pin pin1"
+title="Утечка #024 - высокая срочность">
+</div>
+
+<div
+class="pin pin2"
+title="Утечка #023 - средняя срочность">
+</div>
+
+<div
+class="pin pin3"
+title="Утечка #022 - низкая срочность">
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ADMIN -->
+
+<section id="admin" class="page">
+
+<h1>Панель специалистов</h1>
+
+<br>
+
+<div class="notice">
+
+💡 Здесь специалисты могут видеть поступившие заявки
+и контролировать их статус.
+
+</div>
+
+<div class="table-container">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Заявка</th>
+<th>Место</th>
+<th>Вероятность</th>
+<th>Срочность</th>
+<th>Статус</th>
+
+</tr>
+
+</thead>
+
+<tbody id="reports">
+
+<tr>
+
+<td>#024</td>
+<td>14 мкр.</td>
+<td>91%</td>
+<td>Высокая</td>
+<td>Новая</td>
+
+</tr>
+
+<tr>
+
+<td>#023</td>
+<td>5 мкр.</td>
+<td>78%</td>
+<td>Средняя</td>
+<td>В работе</td>
+
+</tr>
+
+<tr>
+
+<td>#022</td>
+<td>3 мкр.</td>
+<td>42%</td>
+<td>Низкая</td>
+<td>Проверена</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<footer>
+
+💧 AqTau Water
+
+<br><br>
+
+Сервис для быстрого обнаружения утечек воды в Актау
+
+</footer>
+
+
+<script>
+
+/* ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ */
+
+function showPage(pageId) {
+
+    document
+    .querySelectorAll(".page")
+    .forEach(page => {
+        page.classList.remove("active");
+    });
+
+    document
+    .getElementById(pageId)
+    .classList.add("active");
+
+    window.scrollTo(0, 0);
+}
+
+
+/* ПРЕВЬЮ ФОТО */
+
+function previewPhoto(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        document.getElementById("uploadText").innerText =
+            "✅ Фотография выбрана";
+
+        document.getElementById("previewContainer").innerHTML =
+            `<img src="${e.target.result}" class="preview">`;
+
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+/* AI АНАЛИЗ */
+
+function analyzeLeak() {
+
+    const description =
+        document
+        .getElementById("description")
+        .value
+        .toLowerCase();
+
+    let probability = 87;
+    let scale = "Средний";
+
+    if (
+        description.includes("большая") ||
+        description.includes("сильная") ||
+        description.includes("много воды")
+    ) {
+
+        probability = 94;
+        scale = "Большой";
+
+    }
+
+    if (
+        description.includes("маленькая") ||
+        description.includes("немного")
+    ) {
+
+        probability = 64;
+        scale = "Небольшой";
+
+    }
+
+    document.getElementById("probability").innerText =
+        probability + "%";
+
+    document.getElementById("scale").innerText =
+        scale;
+
+    document.getElementById("result").style.display =
+        "block";
+
+}
+
+
+/* ОТПРАВКА ЗАЯВКИ */
+
+function sendReport() {
+
+    const address =
+        document.getElementById("address").value ||
+        "Место не указано";
+
+    const probability =
+        document.getElementById("probability").innerText;
+
+    const table =
+        document.getElementById("reports");
+
+    const newRow =
+        document.createElement("tr");
+
+    newRow.innerHTML = `
+
+        <td>#025</td>
+
+        <td>${address}</td>
+
+        <td>${probability}</td>
+
+        <td>Высокая</td>
+
+        <td class="success">
+        Отправлена
+        </td>
+
+    `;
+
+    table.prepend(newRow);
+
+    alert(
+        "✅ Заявка успешно отправлена специалистам!"
+    );
+
+    showPage("admin");
+
+}
+
+</script>
+
+</body>
+</html>
