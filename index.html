@@ -1001,6 +1001,61 @@ if (report.urgency === "Низкая") {
 }
 
 mapReports.appendChild(pin);
+        pin.onclick = function() {
+
+    const oldPopup = document.querySelector(".map-popup");
+
+    if (oldPopup) {
+        oldPopup.remove();
+    }
+
+    const popup = document.createElement("div");
+
+    popup.className = "map-popup";
+
+    popup.innerHTML = `
+        <div style="
+            background:white;
+            padding:15px;
+            border-radius:12px;
+            box-shadow:0 4px 15px rgba(0,0,0,.25);
+            width:230px;
+            position:absolute;
+            z-index:100;
+        ">
+            <b>📍 Адрес:</b><br>
+            ${escapeHtml(report.address)}
+            <br><br>
+
+            <b>⚠️ Срочность:</b><br>
+            ${escapeHtml(report.urgency)}
+            <br><br>
+
+            ${
+                report.photo
+                ? `<img src="${report.photo}" style="
+                    width:100%;
+                    max-height:150px;
+                    object-fit:cover;
+                    border-radius:8px;
+                ">`
+                : "📷 Фотографии нет"
+            }
+
+            <br><br>
+
+            <button onclick="this.parentElement.parentElement.remove()">
+                Закрыть
+            </button>
+        </div>
+    `;
+
+    popup.style.position = "absolute";
+    popup.style.left = pin.style.left;
+    popup.style.top = "50px";
+
+    mapReports.appendChild(popup);
+};
 
             const number =
                 String(25 + index).padStart(3, "0");
