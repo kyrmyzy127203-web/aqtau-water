@@ -595,20 +595,7 @@ placeholder="Например: большая лужа возле дороги, 
 📍 Актау
 </div>
 
-<div
-class="pin pin1"
-title="Утечка #024 - высокая срочность">
-</div>
-
-<div
-class="pin pin2"
-title="Утечка #023 - средняя срочность">
-</div>
-
-<div
-class="pin pin3"
-title="Утечка #022 - низкая срочность">
-</div>
+<div id="mapReports"></div>
 
 </div>
 
@@ -963,6 +950,10 @@ onValue(reportsRef, (snapshot) => {
 
     const table =
         document.getElementById("reports");
+    const mapReports =
+        document.getElementById("mapReports");
+    
+    mapReports.innerHTML = "";
 
     table.innerHTML = "";
 
@@ -984,7 +975,32 @@ onValue(reportsRef, (snapshot) => {
 
     Object.entries(reports)
         .reverse()
-        .forEach(([id, report], index) => {
+        .forEach(([id, report], index) => 
+    {
+            const pin = document.createElement("div");
+
+pin.className = "pin";
+
+pin.style.left = (10 + (index * 17) % 80) + "%";
+pin.style.top = (20 + (index * 23) % 65) + "%";
+
+pin.title =
+    "Утечка #" + String(25 + index).padStart(3, "0")
+    + " - " + report.urgency;
+
+if (report.urgency === "Высокая") {
+    pin.style.background = "red";
+}
+
+if (report.urgency === "Средняя") {
+    pin.style.background = "orange";
+}
+
+if (report.urgency === "Низкая") {
+    pin.style.background = "green";
+}
+
+mapReports.appendChild(pin);
 
             const number =
                 String(25 + index).padStart(3, "0");
