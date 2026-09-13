@@ -700,29 +700,62 @@ title="Утечка #022 - низкая срочность">
 </footer>
 
 
-<script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    push,
+    onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyDty1_Zwxk8-3oogyKoicyhG1nHSOHDGF0",
+
+    authDomain: "aqtau-water.firebaseapp.com",
+
+    databaseURL: "https://aqtau-water-default-rtdb.firebaseio.com",
+
+    projectId: "aqtau-water",
+
+    storageBucket: "aqtau-water.firebasestorage.app",
+
+    messagingSenderId: "529911210293",
+
+    appId: "1:529911210293:web:15e86463a0fe94a2ac2c7c",
+
+    measurementId: "G-Y37FQJJJ99"
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const database = getDatabase(app);
+
 
 /* ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ */
 
-function showPage(pageId) {
+window.showPage = function(pageId) {
 
-    document
-    .querySelectorAll(".page")
-    .forEach(page => {
+    document.querySelectorAll(".page").forEach(page => {
+
         page.classList.remove("active");
+
     });
 
-    document
-    .getElementById(pageId)
-    .classList.add("active");
+    document.getElementById(pageId).classList.add("active");
 
     window.scrollTo(0, 0);
-}
+};
 
 
 /* ПРЕВЬЮ ФОТО */
 
-function previewPhoto(event) {
+window.previewPhoto = function(event) {
 
     const file = event.target.files[0];
 
@@ -741,21 +774,20 @@ function previewPhoto(event) {
     };
 
     reader.readAsDataURL(file);
-}
+};
 
 
 /* AI АНАЛИЗ */
 
-function analyzeLeak() {
+window.analyzeLeak = function() {
 
     const description =
-        document
-        .getElementById("description")
-        .value
-        .toLowerCase();
+        document.getElementById("description").value.toLowerCase();
 
     let probability = 87;
+
     let scale = "Средний";
+
 
     if (
         description.includes("большая") ||
@@ -764,9 +796,11 @@ function analyzeLeak() {
     ) {
 
         probability = 94;
+
         scale = "Большой";
 
     }
+
 
     if (
         description.includes("маленькая") ||
@@ -774,9 +808,11 @@ function analyzeLeak() {
     ) {
 
         probability = 64;
+
         scale = "Небольшой";
 
     }
+
 
     document.getElementById("probability").innerText =
         probability + "%";
@@ -786,54 +822,172 @@ function analyzeLeak() {
 
     document.getElementById("result").style.display =
         "block";
+};
 
-}
 
+/* СОХРАНЕНИЕ ЗАЯВКИ */
 
-/* ОТПРАВКА ЗАЯВКИ */
-
-function sendReport() {
+window.sendReport = async function() {
 
     const address =
         document.getElementById("address").value ||
         "Место не указано";
 
+
+    const description =
+        document.getElementById("description").value ||
+        "Описание отсутствует";
+
+
+    const urgency =
+        document.getElementById("urgency").value;
+
+
     const probability =
         document.getElementById("probability").innerText;
+
+
+    const scale =
+        document.getElementById("scale").innerText;
+
+
+    const report = {
+
+        address: address,
+
+        description: description,
+
+        urgency: urgency,
+
+        probability: probability,
+
+        scale: scale,
+
+        status: "Новая",
+
+        createdAt: new Date().toISOString()
+
+    };
+
+
+    try {
+
+        await push(
+            ref(database, "reports"),
+            report
+        );
+
+
+        alert(
+            "✅ Заявка сохранена и отправлена специалистам!"
+        );
+
+
+        document.getElementById("address").value = "";
+
+        document.getElementById("description").value = "";
+
+        document.getElementById("urgency").value = "Не знаю";
+
+        document.getElementById("result").style.display = "none";
+
+
+        showPage("admin");
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Не удалось сохранить заявку."
+        );
+
+    }
+
+};
+
+
+/* ЗАГРУЗКА ЗАЯВОК */
+
+const reportsRef = ref(database, "reports");
+
+
+onValue(reportsRef, (snapshot) => {
 
     const table =
         document.getElementById("reports");
 
-    const newRow =
-        document.createElement("tr");
 
-    newRow.innerHTML = `
+    table.innerHTML = "";
 
-        <td>#025</td>
 
-        <td>${address}</td>
+    if (!snapshot.exists()) {
 
-        <td>${probability}</td>
+        table.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    Заявок пока нет
+                </td>
+            </tr>
+        `;
 
-        <td>Высокая</td>
+        return;
+    }
 
-        <td class="success">
-        Отправлена
-        </td>
 
-    `;
+    const reports = snapshot.val();
 
-    table.prepend(newRow);
 
-    alert(
-        "✅ Заявка успешно отправлена специалистам!"
-    );
+    Object.entries(reports)
+        .reverse()
+        .forEach(([id, report], index) => {
 
-    showPage("admin");
+            const number =
+                String(25 + index).padStart(3, "0");
 
+
+            const newRow =
+                document.createElement("tr");
+
+
+            newRow.innerHTML = `
+
+                <td>#${number}</td>
+
+                <td>${escapeHtml(report.address)}</td>
+
+                <td>${escapeHtml(report.probability)}</td>
+
+                <td>${escapeHtml(report.urgency)}</td>
+
+                <td class="success">
+                    ${escapeHtml(report.status)}
+                </td>
+
+            `;
+
+
+            table.appendChild(newRow);
+
+        });
+
+});
+
+
+/* ЗАЩИТА ТЕКСТА */
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        text ?? "";
+
+    return div.innerHTML;
 }
 
 </script>
-
 </body>
 </html>
